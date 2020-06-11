@@ -1,0 +1,63 @@
+﻿@model List<Gorevli>
+@{
+    ViewBag.Title = "Görevli Listesi";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section newmenu
+{
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span class="glyphicon glyphicon-plus"></span> Yeni <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a href="/Staff/Add?mulkid=@Request.QueryString["mulkid"].ToString()">Görevli</a></li>
+        </ul>
+    </li>
+}
+
+<div class="row">
+
+
+    <div class="col-md-12">
+        <div class="col-md-12">
+            <h3><b>Görevliler</b></h3>
+            <hr />
+
+            <div class="text-left">
+                <a href="/Staff/List?mulkid=@Request.QueryString["mulkid"].ToString()" class="btn btn-info">Tüm Görevliler</a>
+                <br /><br />
+            </div>
+
+            <div class="table-responsive col-md-12">
+
+                @Html.Grid(Model).Columns(col =>
+           {
+               col.Add(x => x.Id, true);
+               col.Add(x => x.Adi).Titled("Görevli Adı").Filterable(true);
+               col.Add(x => x.Soyadi).Titled("Görevli Soyadı").Filterable(true);
+               col.Add(x => x.TcNo).Titled("TC No").Filterable(true);
+               col.Add(x => x.SigortaNo).Titled("Sigorta No").Filterable(true);
+               col.Add(x => x.Maasi).Titled("Maaşı").Filterable(true);
+               col.Add(x => x.GorevliTurleri.Adi).Titled("Görev Türü").Filterable(true);
+               col.Add(x => x.IsTanimi).Titled("İş Tanımı").Filterable(true);
+
+               col.Add().Encoded(false).Sanitized(false).RenderValueAs(x => Html.ActionLink("Kalemler", "Kalemler", new { id = x.Id }, new { @class = "btn btn-info btn-sm" }));
+
+               col.Add().Encoded(false).Sanitized(false).RenderValueAs(x => Html.ActionLink("Düzenle", "Edit", new { id = x.Id }, new { @class = "btn btn-warning btn-sm" }));
+
+               col.Add().Encoded(false).Sanitized(false).RenderValueAs(x => Html.ActionLink("Sil", "Delete", new { id = x.Id }, new { @class = "btn btn-danger btn-sm" }));
+
+           }).WithPaging(5).SetLanguage("tr").Sortable(true).EmptyText("Kayıtlı görevli bulunmamaktadır.")
+
+            </div>
+
+        </div>
+
+        <div class="col-md-12 text-left">
+            <br /><br />
+            <a href="/Block/Details/@Request.QueryString["mulkid"].ToString()" class="btn btn-default">Geri Dön!</a>
+        </div>
+    </div>
+
+</div>
